@@ -4,13 +4,14 @@ import asyncio
 from poke_env import RandomPlayer
 
 from config.showdown_server import close_showdown_server, run_showdown_server
+from player.max_damage_player import MaxDamagePlayer
 
 
 async def main():
     process = run_showdown_server()
     print(f"Pokemon Showdown server is running (PID: {process.pid})")
 
-    a = RandomPlayer(battle_format="gen9randombattle", max_concurrent_battles=10)
+    a = MaxDamagePlayer(battle_format="gen9randombattle", max_concurrent_battles=10)
     b = RandomPlayer(battle_format="gen9randombattle", max_concurrent_battles=10)
     await a.battle_against(b, n_battles=100)
     print(f"Player `a` won {a.n_won_battles}/100")
