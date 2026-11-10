@@ -2,7 +2,7 @@ import pytest
 from poke_env import SimpleHeuristicsPlayer
 
 from config.showdown_server import close_showdown_server, run_showdown_server
-from player.max_damage_player import MaxDamagePlayer
+from players.max_damage.max_damage import MaxDamagePlayer
 
 
 @pytest.mark.asyncio
