@@ -14,7 +14,13 @@ class HeuristicPlayer(Player):
     
     def choose_move(self, battle: AbstractBattle) -> BattleOrder:
         self.knowledge.update(battle)
-        
-        
-        pass
+
+        if battle.trapped or not battle.available_moves:
+            if battle.available_switches:
+                return self.create_order(battle.available_switches[0])
+            
+        if battle.available_moves:
+            return self.create_order(battle.available_moves[0])
+            
+        return self.choose_default_move(battle)
     
