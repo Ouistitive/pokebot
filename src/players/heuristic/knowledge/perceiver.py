@@ -1,35 +1,14 @@
 
-from enum import Enum
+from poke_env.battle import AbstractBattle, MoveCategory, Pokemon
 
-from poke_env.battle import AbstractBattle, MoveCategory, Pokemon, Weather
-
-
-class PokemonRole(Enum):
-    STALL = 1
-    SWEEP = 2
+from players.heuristic.knowledge import PokemonRole
+from players.heuristic.knowledge.opponent_tracker import OpponentTracker
 
 
-class OpponentTracker:
-    def __init__(self, species: str):
-        self.species: str = species
-
-        # Facts / Observables
-        self.current_hp: float = 1.0
-        self.status = None
-        
-        # Agent's beliefs
-        self.item_probs: dict[str, float] = {}
-        self.role: PokemonRole | None = None
-
-    def __repr__(self):
-        return f"OpponentTracker(species='{self.species}', hp={self.current_hp}, role={self.role})"
-
-
-class Knowledge:
+class Perceiver:
     def __init__(self):
         self.opponent_trackers: dict[str, OpponentTracker] = {}
         self.previous_opponent_species: str | None = None
-        self.previous_opponent_hp: float = 1.0
 
     
     def update(self, battle: AbstractBattle):
@@ -38,20 +17,25 @@ class Knowledge:
 
         if not species in self.opponent_trackers:
             self.opponent_trackers[species] = OpponentTracker(species)
-
+        active_pokemon_tracker = self.opponent_trackers[species]
+        
+        active_pokemon_tracker.update_facts(opponent_pokemon)
+        
         self._determine_role(opponent_pokemon)
-
+        
         self.previous_opponent_species = opponent_pokemon
-        self.opponent_trackers[species].current_hp = opponent_pokemon.current_hp_fraction
 
 
     def _determine_role(self, opponent_pokemon: Pokemon):
+        """
+            Try to define the pokemon's role in the team (whether its a sweeper or staller)
+        """
         opponent_tracker = self.opponent_trackers[opponent_pokemon.species]
 
         status_moves = 0
         offensive_moves = 0
-        for _, v in opponent_pokemon.moves.items():
-            if v.category == MoveCategory.STATUS:
+        for move in opponent_tracker.moves:
+            if move.category == MoveCategory.STATUS:
                 status_moves += 1
             else:
                 offensive_moves += 1
