@@ -1,7 +1,8 @@
 
 from poke_env.battle import Move, Pokemon
 
-from players.heuristic.knowledge import PokemonRole
+from players.heuristic.utils.pokemon_role import PokemonRole
+
 
 class OpponentTracker:
     def __init__(self, species: str):
@@ -20,6 +21,7 @@ class OpponentTracker:
             "spe": None,
         }
         self.item_held: str = "unknown_item"
+        self.ability: str | None = None
         
         # Agent's beliefs
         self.item_probs: dict[str, float] = {}
@@ -36,7 +38,11 @@ class OpponentTracker:
         self.status = opponent_pokemon.status
         self.statistics = opponent_pokemon.base_stats
         self.item_held = opponent_pokemon.item
+        self.ability = opponent_pokemon.ability
+        
+        if self.item_held != "unknown_item":
+            self.item_probs = { self.item_held: 1.0 }
     
 
     def __repr__(self):
-        return f"OpponentTracker(species='{self.species}', hp={self.current_hp}, role={self.role}, item={self.item_held})"
+        return f"OpponentTracker(species='{self.species}', hp={self.current_hp}, role={self.role}, item={self.item_held}, ability={self.ability})"

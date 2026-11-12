@@ -10,10 +10,13 @@ class HeuristicPlayer(Player):
     
     def __init__(self, *args, **kwargs):
         self.knowledge = Perceiver()
+        
         super().__init__(*args, **kwargs)
     
     def choose_move(self, battle: AbstractBattle) -> BattleOrder:
         self.knowledge.update(battle)
+        
+        
 
         if battle.trapped or not battle.available_moves:
             if battle.available_switches:
