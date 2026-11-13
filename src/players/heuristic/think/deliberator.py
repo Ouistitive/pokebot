@@ -1,4 +1,6 @@
 
+from poke_env.battle import AbstractBattle
+
 from players.heuristic.knowledge.perceiver import Perceiver
 
 
@@ -6,5 +8,5 @@ class Deliberator:
     def __init__(self):
         pass
     
-    def deliberate(self, knowledge: Perceiver):
+    def deliberate(self, battle: AbstractBattle, knowledge: Perceiver):
         pass

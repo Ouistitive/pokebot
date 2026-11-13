@@ -24,18 +24,21 @@ class Perceiver:
         opponent_tracker = self.opponent_trackers[opponent_pokemon.species]
         
         self._determine_role(opponent_pokemon, opponent_tracker)
-        self._determine_items(opponent_pokemon, opponent_tracker)
+        self._determine_items(opponent_tracker)
         
-        self.previous_opponent_species = opponent_pokemon
+        self.previous_opponent_species = species
 
 
     def _determine_role(self, opponent_pokemon: Pokemon, opponent_tracker: OpponentTracker):
         """
             Try to define the pokemon's role in the team (whether its a sweeper, staller or bulky)
         """
+        if not opponent_tracker.role is None:
+            return
+        
         opponent_tracker.role = calculate_pokemon_role(opponent_pokemon)
         
-    def _determine_items(self, opponent_pokemon: Pokemon, opponent_tracker: OpponentTracker):
+    def _determine_items(self, opponent_tracker: OpponentTracker):
         if opponent_tracker.item_held != "unknown_item":
             return
         

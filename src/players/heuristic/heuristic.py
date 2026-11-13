@@ -4,18 +4,20 @@ from poke_env.battle import AbstractBattle
 from poke_env.player import BattleOrder
 
 from players.heuristic.knowledge.perceiver import Perceiver
+from players.heuristic.think.deliberator import Deliberator
 
 
 class HeuristicPlayer(Player):
     
     def __init__(self, *args, **kwargs):
-        self.knowledge = Perceiver()
+        self.perceiver = Perceiver()
+        self.deliberator = Deliberator()
         
         super().__init__(*args, **kwargs)
     
     def choose_move(self, battle: AbstractBattle) -> BattleOrder:
-        self.knowledge.update(battle)
-        
+        self.perceiver.update(battle)
+        self.deliberator.deliberate(battle, self.perceiver)
         
 
         if battle.trapped or not battle.available_moves:

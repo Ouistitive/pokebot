@@ -26,4 +26,4 @@ def calculate_pokemon_role(pokemon: Pokemon) -> PokemonRole:
         return PokemonRole.OFFENSIVE
     elif ratio < 0.85:
         return PokemonRole.DEFENSIVE
-    return PokemonRole.BULK
+    return PokemonRole.BULKY

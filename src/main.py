@@ -17,7 +17,7 @@ async def main():
     await a.battle_against(b, n_battles=1)
     print(f"Player `a` won {a.n_won_battles}/100")
 
-    print(a.knowledge.opponent_trackers)
+    print(a.perceiver.opponent_trackers)
 
     await a.ps_client.stop_listening()
     await b.ps_client.stop_listening()
