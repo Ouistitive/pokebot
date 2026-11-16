@@ -10,14 +10,13 @@ from players.heuristic.utils.pokemon_role import PokemonRole
 
 
 class Deliberator:
-    def __init__(self, knowledge: Knowledge):
-        self.knowledge = knowledge
-
+    def __init__(self):
+        pass
     
-    def deliberate(self, battle: AbstractBattle):
+    def deliberate(self, battle: AbstractBattle, knowledge: Knowledge):
         active_pokemon: Pokemon = battle.active_pokemon
         opponent_pokemon: Pokemon = battle.opponent_active_pokemon
-        opponent_beliefs: PokemonBeliefs = self.knowledge.pokemon_beliefs[opponent_pokemon.species]
+        opponent_beliefs: PokemonBeliefs = knowledge.pokemon_beliefs[opponent_pokemon.species]
         
         moves = [move for move in battle.available_moves]
         available_switches: list[Pokemon] = battle.available_switches

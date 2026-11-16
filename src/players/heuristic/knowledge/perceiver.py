@@ -8,25 +8,25 @@ from players.heuristic.utils.utils import calculate_pokemon_role
 
 
 class Perceiver:
-    def __init__(self, knowledge: Knowledge):
-        self.knowledge = knowledge
+    def __init__(self):
+        pass
 
     
-    def update(self, battle: AbstractBattle):
+    def update(self, battle: AbstractBattle, knowledge: Knowledge):
         opponent_pokemon: Pokemon = battle.opponent_active_pokemon
         species = opponent_pokemon.species
-        pokemon_beliefs = self.knowledge.pokemon_beliefs
+        pokemon_beliefs = knowledge.pokemon_beliefs
         
         if not species in pokemon_beliefs:
             pokemon_beliefs[species] = PokemonBeliefs(species)
+            
         active_pokemon_beliefs = pokemon_beliefs[species]
-        
         active_pokemon_beliefs.update_facts(opponent_pokemon)
         
         self._determine_role(opponent_pokemon, active_pokemon_beliefs)
         self._determine_items(active_pokemon_beliefs)
         
-        self.knowledge.previous_opponent_species = opponent_pokemon.species
+        knowledge.previous_opponent_species = opponent_pokemon.species
 
 
     def _determine_role(self, opponent_pokemon: Pokemon, active_pokemon_beliefs: PokemonBeliefs):
