@@ -2,9 +2,9 @@
 from poke_env.battle import AbstractBattle, Pokemon
 
 from players.heuristic.knowledge.knowledge import Knowledge
+from players.heuristic.knowledge.pokemon_beliefs import PokemonBeliefs
 from players.heuristic.utils.pokemon_role import PokemonRole
 from players.heuristic.utils.utils import calculate_pokemon_role
-from players.heuristic.knowledge.opponent_tracker import OpponentTracker
 
 
 class Perceiver:
@@ -15,48 +15,47 @@ class Perceiver:
     def update(self, battle: AbstractBattle):
         opponent_pokemon: Pokemon = battle.opponent_active_pokemon
         species = opponent_pokemon.species
-        opponents_trackers = self.knowledge.opponent_trackers
+        pokemon_beliefs = self.knowledge.pokemon_beliefs
         
-        if not species in opponents_trackers:
-            opponents_trackers[species] = OpponentTracker(species)
-        active_pokemon_tracker = opponents_trackers[species]
+        if not species in pokemon_beliefs:
+            pokemon_beliefs[species] = PokemonBeliefs(species)
+        active_pokemon_beliefs = pokemon_beliefs[species]
         
-        active_pokemon_tracker.update_facts(opponent_pokemon)
-        opponent_tracker = opponents_trackers[opponent_pokemon.species]
+        active_pokemon_beliefs.update_facts(opponent_pokemon)
         
-        self._determine_role(opponent_pokemon, opponent_tracker)
-        self._determine_items(opponent_tracker)
+        self._determine_role(opponent_pokemon, active_pokemon_beliefs)
+        self._determine_items(active_pokemon_beliefs)
         
         self.knowledge.previous_opponent_species = opponent_pokemon.species
 
 
-    def _determine_role(self, opponent_pokemon: Pokemon, opponent_tracker: OpponentTracker):
+    def _determine_role(self, opponent_pokemon: Pokemon, active_pokemon_beliefs: PokemonBeliefs):
         """
             Try to define the pokemon's role in the team (whether its a sweeper, staller or bulky)
         """
         if not opponent_tracker.role is None:
             return
         
-        opponent_tracker.role = calculate_pokemon_role(opponent_pokemon)
+        active_pokemon_beliefs.role = calculate_pokemon_role(opponent_pokemon)
         
-    def _determine_items(self, opponent_tracker: OpponentTracker):
-        if opponent_tracker.item_held != "unknown_item":
+    def _determine_items(self, active_pokemon_beliefs: PokemonBeliefs):
+        if active_pokemon_beliefs.is_item_confirmed():
             return
         
-        if opponent_tracker.role == PokemonRole.DEFENSIVE:
-            opponent_tracker.item_probs = {
+        if active_pokemon_beliefs.role == PokemonRole.DEFENSIVE:
+            active_pokemon_beliefs.item_probs = {
                 "heavy_duty_boots": 0.50,
                 "rocky_helmet": 0.30,
                 "assault_vest": 0.20,
             }
-        elif opponent_tracker.role == PokemonRole.OFFENSIVE:
-            opponent_tracker.item_probs = {
+        elif active_pokemon_beliefs.role == PokemonRole.OFFENSIVE:
+            active_pokemon_beliefs.item_probs = {
                 "choice_scarf": 0.40,
                 "choice_band": 0.30,
                 "focus_sash": 0.30,
             }
         else:
-            opponent_tracker.item_probs = {
+            active_pokemon_beliefs.item_probs = {
                 "heavy_duty_boots": 0.60,
                 "assault_vest": 0.40,
             }

@@ -14,9 +14,9 @@ async def main():
     a = HeuristicPlayer(battle_format="gen9randombattle", max_concurrent_battles=10)
     b = SimpleHeuristicsPlayer(battle_format="gen9randombattle", max_concurrent_battles=10)
     await a.battle_against(b, n_battles=1)
-    print(f"Player `a` won {a.n_won_battles}/100")
+    print(f"Player `a` won {a.n_won_battles}/1")
 
-    print(a.perceiver.opponent_trackers)
+    print(a.perceiver.pokemon_beliefs)
 
     await a.ps_client.stop_listening()
     await b.ps_client.stop_listening()

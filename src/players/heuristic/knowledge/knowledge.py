@@ -1,10 +1,10 @@
 
 
-from players.heuristic.knowledge.opponent_tracker import OpponentTracker
+from players.heuristic.knowledge.pokemon_beliefs import PokemonBeliefs
 
 
 class Knowledge:
     def __init__(self):
-        self.opponent_trackers: dict[str, OpponentTracker] = {}
+        self.pokemon_beliefs: dict[str, PokemonBeliefs] = {}
         self.previous_opponent_species: str | None = None
         
