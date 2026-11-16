@@ -33,7 +33,7 @@ class Perceiver:
         """
             Try to define the pokemon's role in the team (whether its a sweeper, staller or bulky)
         """
-        if not opponent_tracker.role is None:
+        if not active_pokemon_beliefs.role is None:
             return
         
         active_pokemon_beliefs.role = calculate_pokemon_role(opponent_pokemon)

@@ -16,7 +16,7 @@ async def main():
     await a.battle_against(b, n_battles=1)
     print(f"Player `a` won {a.n_won_battles}/1")
 
-    print(a.perceiver.pokemon_beliefs)
+    print(a.knowledge.pokemon_beliefs)
 
     await a.ps_client.stop_listening()
     await b.ps_client.stop_listening()

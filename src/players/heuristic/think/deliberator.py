@@ -1,8 +1,4 @@
 
-from poke_env.battle import AbstractBattle
-
-from poke_env.battle import AbstractBattle
-
 from poke_env.battle import AbstractBattle, Move, Pokemon
 
 from config.translator import translate_pokemon_species
@@ -62,7 +58,7 @@ class Deliberator:
         else:
             if opponent_beliefs.role == PokemonRole.DEFENSIVE and damage_ratio <= 0.15:
                 score -= 30.0
-            if opponent_beliefs.role == PokemonRole.BULK and damage_ratio <= 0.4:
+            if opponent_beliefs.role == PokemonRole.BULKY and damage_ratio <= 0.4:
                 score -= 20.0
         
         return score
@@ -93,9 +89,3 @@ class Deliberator:
                 score -= 20
         
         return score
-
-    def __init__(self):
-        pass
-    
-    def deliberate(self, battle: AbstractBattle, knowledge: Perceiver):
-        pass

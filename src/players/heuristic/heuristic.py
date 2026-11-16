@@ -10,22 +10,17 @@ from players.heuristic.think.deliberator import Deliberator
 
 class HeuristicPlayer(Player):
     def __init__(self, *args, **kwargs):
-        self.knowledge = Perceiver()
+        self.knowledge = Knowledge()
+        
+        self.perceiver = Perceiver(self.knowledge)
+        self.deliberator = Deliberator(self.knowledge)
         
         super().__init__(*args, **kwargs)
 
 
     def choose_move(self, battle: AbstractBattle) -> BattleOrder:
-        self.knowledge.update(battle)
+        self.perceiver.update(battle)
+        action = self.deliberator.deliberate(battle)
         
-        
+        return self.create_order(action)
 
-        if battle.trapped or not battle.available_moves:
-            if battle.available_switches:
-                return self.create_order(battle.available_switches[0])
-            
-        if battle.available_moves:
-            return self.create_order(battle.available_moves[0])
-            
-        return self.choose_default_move(battle)
-    
