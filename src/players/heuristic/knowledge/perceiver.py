@@ -1,32 +1,33 @@
 
 from poke_env.battle import AbstractBattle, Pokemon
 
+from players.heuristic.knowledge.knowledge import Knowledge
 from players.heuristic.utils.pokemon_role import PokemonRole
 from players.heuristic.utils.utils import calculate_pokemon_role
 from players.heuristic.knowledge.opponent_tracker import OpponentTracker
 
 
 class Perceiver:
-    def __init__(self):
-        self.opponent_trackers: dict[str, OpponentTracker] = {}
-        self.previous_opponent_species: str | None = None
+    def __init__(self, knowledge: Knowledge):
+        self.knowledge = knowledge
 
     
     def update(self, battle: AbstractBattle):
         opponent_pokemon: Pokemon = battle.opponent_active_pokemon
         species = opponent_pokemon.species
-
-        if not species in self.opponent_trackers:
-            self.opponent_trackers[species] = OpponentTracker(species)
-        active_pokemon_tracker = self.opponent_trackers[species]
+        opponents_trackers = self.knowledge.opponent_trackers
+        
+        if not species in opponents_trackers:
+            opponents_trackers[species] = OpponentTracker(species)
+        active_pokemon_tracker = opponents_trackers[species]
         
         active_pokemon_tracker.update_facts(opponent_pokemon)
-        opponent_tracker = self.opponent_trackers[opponent_pokemon.species]
+        opponent_tracker = opponents_trackers[opponent_pokemon.species]
         
         self._determine_role(opponent_pokemon, opponent_tracker)
         self._determine_items(opponent_tracker)
         
-        self.previous_opponent_species = species
+        self.knowledge.previous_opponent_species = opponent_pokemon.species
 
 
     def _determine_role(self, opponent_pokemon: Pokemon, opponent_tracker: OpponentTracker):
