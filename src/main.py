@@ -1,7 +1,7 @@
 
 import asyncio
 
-from poke_env import RandomPlayer, SimpleHeuristicsPlayer
+from poke_env import SimpleHeuristicsPlayer
 
 from config.showdown_server import close_showdown_server, run_showdown_server
 from players.heuristic.heuristic import HeuristicPlayer

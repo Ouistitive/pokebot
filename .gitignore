@@ -3,3 +3,6 @@ pokemon_showdown.log
 __pycache__/
 .venv
 .pytest_cache/
+
+.out/
+out.txt
