@@ -70,7 +70,7 @@ class Deliberator:
         if move.base_power == 0.0:
             if move.heal > 0:
                 score = calculate_heal_move_score(move, active, opponent)
-            elif move.boosts is not None:
+            elif move.boosts:
                 score = calculate_boost_move_score(move, active, opponent_beliefs, opponent_team)
             else:
                 score = calculate_status_move_score(move, active, opponent)
@@ -78,6 +78,10 @@ class Deliberator:
         else:
             score = calculate_offensive_move_score(move, active, opponent, opponent_beliefs)
                     
+        accuracy = move.accuracy if move.accuracy is not None else 1.0
+        if accuracy <= 0.9:
+            accuracy = min(1.0, accuracy + 0.1)
+    
         return score * move.accuracy * move.expected_hits
 
 
