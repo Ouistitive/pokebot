@@ -7,6 +7,8 @@ from config.translator import translate_pokemon_species
 from players.heuristic.knowledge.knowledge import Knowledge
 from players.heuristic.knowledge.pokemon_beliefs import PokemonBeliefs
 from players.heuristic.think.scorers.damage_calculator import calculate_damage, calculate_damage_opponent
+from players.heuristic.think.scorers.damage_scorer import calculate_offensive_move_score
+from players.heuristic.think.scorers.status_scorer import calculate_boost_move_score, calculate_heal_move_score, calculate_status_move_score
 from players.heuristic.think.scorers.switch_scorer import calculate_switch_score
 from players.heuristic.utils.pokemon_role import PokemonRole
 
@@ -28,11 +30,17 @@ class Deliberator:
         
         moves = [move for move in battle.available_moves]
         available_switches: list[Pokemon] = battle.available_switches
-        
+
         scored_actions = []
         
         for move in moves:
-            score = self._evaluate_move(move, active_pokemon, opponent_pokemon, opponent_beliefs)
+            score = self._evaluate_move(
+                move, 
+                active_pokemon, 
+                opponent_pokemon, 
+                opponent_beliefs, 
+                [mon for mon in battle.opponent_team.values()]
+            )
             scored_actions.append((score, {"type": "move", "action": move}))
         
         for switch_option in available_switches:
@@ -56,28 +64,20 @@ class Deliberator:
         return scored_actions[0][1]["action"]
         
     
-    def _evaluate_move(self, move: Move, active: Pokemon, opponent: Pokemon, opponent_beliefs: PokemonBeliefs) -> float:        
-        damage = calculate_damage(move, active, opponent)
-        damage_ratio = damage / opponent.max_hp
-        score = damage_ratio * 100.0
+    def _evaluate_move(self, move: Move, active: Pokemon, opponent: Pokemon, opponent_beliefs: PokemonBeliefs, opponent_team: list[Pokemon]) -> float:        
+        score = 0.0
         
-        if active.base_stats["spe"] > opponent.base_stats["spe"] or move.priority >= 1:
-            score += 15.0
+        if move.base_power == 0.0:
+            if move.heal > 0:
+                score = calculate_heal_move_score(move, active, opponent)
+            elif move.boosts is not None:
+                score = calculate_boost_move_score(move, active, opponent_beliefs, opponent_team)
+            else:
+                score = calculate_status_move_score(move, active, opponent)
+
         else:
-            score -= 15.0
-        
-        if damage_ratio >= opponent.current_hp_fraction:
-            score += 50.0
-            if move.priority >= 1:
-                score += 100.0
-        else:
-            if opponent_beliefs.role == PokemonRole.DEFENSIVE and damage_ratio <= 0.15:
-                score -= 30.0
-            if opponent_beliefs.role == PokemonRole.BULKY and damage_ratio <= 0.25:
-                score -= 20.0
-            if opponent_beliefs.role == PokemonRole.OFFENSIVE and damage_ratio <= 0.35:
-                score -= 20.0
-                
+            score = calculate_offensive_move_score(move, active, opponent, opponent_beliefs)
+                    
         return score * move.accuracy * move.expected_hits
 
 
@@ -111,7 +111,9 @@ class Deliberator:
             else:
                 score -= 20
         
-        return score
+        total_boosts = sum(active_pokemon.boosts.values())
+        
+        return score + (total_boosts * 10)
 
 
     def _do_default_action(self, battle: AbstractBattle):
