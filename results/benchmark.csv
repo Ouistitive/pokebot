@@ -1,0 +1,4 @@
+timestamp,agent_name,opponent_name,battle_format,n_battles,n_won,win_rate_percent,total_time_sec,time_per_battle_sec,max_concurrent_battles
+2026-11-17 15:04:46,HeuristicPlayer,RandomPlayer,gen9randombattle,200,196,98.0,7.49,0.0374,15
+2026-11-17 15:04:51,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,174,87.0,5.78,0.0289,15
+2026-11-17 15:04:58,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,90,45.0,6.13,0.0306,15

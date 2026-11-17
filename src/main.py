@@ -1,5 +1,7 @@
 
+import argparse
 import asyncio
+import logging
 
 from poke_env import SimpleHeuristicsPlayer
 
@@ -8,6 +10,18 @@ from players.heuristic.heuristic import HeuristicPlayer
 
 
 async def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbose", action="store_true", help="show heuristic debug logs")
+    args = parser.parse_args()
+
+    logging.basicConfig(
+        level=logging.WARNING,
+        format="%(name)s %(message)s",
+    )
+    logging.getLogger("players.heuristic").setLevel(
+        logging.DEBUG if args.verbose else logging.WARNING
+    )
+
     process = run_showdown_server()
     print(f"Pokemon Showdown server is running (PID: {process.pid})")
 

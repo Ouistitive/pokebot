@@ -1,4 +1,6 @@
 
+import logging
+
 from poke_env import Player
 from poke_env.battle import AbstractBattle
 from poke_env.player import BattleOrder
@@ -6,6 +8,8 @@ from poke_env.player import BattleOrder
 from players.heuristic.knowledge.knowledge import Knowledge
 from players.heuristic.knowledge.perceiver import Perceiver
 from players.heuristic.think.deliberator import Deliberator
+
+logger = logging.getLogger(__name__)
 
 
 class HeuristicPlayer(Player):
@@ -28,7 +32,8 @@ class HeuristicPlayer(Player):
 
 
     def _battle_finished_callback(self, battle: AbstractBattle):
-        print(self.knowledge_by_battle[battle.battle_tag].pokemon_beliefs)
+        knowledge = self.knowledge_by_battle.pop(battle.battle_tag, None)
+        if knowledge is not None:
+            logger.info("Battle %s beliefs: %s", battle.battle_tag, knowledge.pokemon_beliefs)
         
-        self.knowledge_by_battle.pop(battle.battle_tag, None)
         return super()._battle_finished_callback(battle)

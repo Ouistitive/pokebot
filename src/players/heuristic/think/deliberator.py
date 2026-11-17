@@ -1,4 +1,6 @@
 
+import logging
+
 from poke_env.battle import AbstractBattle, Move, Pokemon
 
 from config.translator import translate_pokemon_species
@@ -7,6 +9,8 @@ from players.heuristic.knowledge.pokemon_beliefs import PokemonBeliefs
 from players.heuristic.think.scorers.damage_calculator import calculate_damage, calculate_damage_opponent
 from players.heuristic.think.scorers.switch_scorer import calculate_switch_score
 from players.heuristic.utils.pokemon_role import PokemonRole
+
+logger = logging.getLogger(__name__)
 
 
 class Deliberator:
@@ -33,11 +37,17 @@ class Deliberator:
         
         scored_actions.sort(key=lambda x: x[0], reverse=True)
         
-        print(translate_pokemon_species(active_pokemon.species), f"({active_pokemon.current_hp_fraction}) VS", translate_pokemon_species(opponent_pokemon.species), f"({opponent_pokemon.current_hp_fraction})")
-        print("--- OPTIONS EVALUATED ---")
+        logger.debug(
+            "%s (%s) VS %s (%s)",
+            translate_pokemon_species(active_pokemon.species),
+            active_pokemon.current_hp_fraction,
+            translate_pokemon_species(opponent_pokemon.species),
+            opponent_pokemon.current_hp_fraction,
+        )
+        logger.debug("--- OPTIONS EVALUATED ---")
         for score, action_info in scored_actions:
             name = action_info["action"].id if action_info["type"] == "move" else translate_pokemon_species(action_info["action"].species)
-            print(f"[{action_info['type'].upper()}] {name} -> Score : {score}")
+            logger.debug("[%s] %s -> Score : %s", action_info["type"].upper(), name, score)
         
         return scored_actions[0][1]["action"]
         
@@ -47,7 +57,7 @@ class Deliberator:
         damage_ratio = damage / opponent.max_hp
         score = damage_ratio * 100.0
         
-        if active.base_stats["spe"] > opponent.base_stats["spe"] or move.priority > 1:
+        if active.base_stats["spe"] > opponent.base_stats["spe"]:
             score += 15.0
         else:
             score -= 15.0
