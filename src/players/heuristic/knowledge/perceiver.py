@@ -13,6 +13,9 @@ class Perceiver:
 
     
     def update(self, battle: AbstractBattle, knowledge: Knowledge):
+        if battle.opponent_active_pokemon is None:
+            return
+
         opponent_pokemon: Pokemon = battle.opponent_active_pokemon
         species = opponent_pokemon.species
         pokemon_beliefs = knowledge.pokemon_beliefs

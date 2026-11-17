@@ -7,7 +7,7 @@ MULTIPLIER_SCORES = {
     4.0: -20   # Double faiblesse (très risqué)
 }
 
-def calculate_switch_score(opponent, pokemon_switch):
+def calculate_switch_score(pokemon_switch, opponent):
     mult_1 = opponent.damage_multiplier(pokemon_switch.type_1)
     
     if hasattr(pokemon_switch, 'type_2') and pokemon_switch.type_2 and pokemon_switch.type_2 != pokemon_switch.type_1:

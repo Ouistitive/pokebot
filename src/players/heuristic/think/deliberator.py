@@ -18,6 +18,10 @@ class Deliberator:
         pass
     
     def deliberate(self, battle: AbstractBattle, knowledge: Knowledge):
+        action = self._do_default_action(battle)
+        if action is not None:
+            return action
+        
         active_pokemon: Pokemon = battle.active_pokemon
         opponent_pokemon: Pokemon = battle.opponent_active_pokemon
         opponent_beliefs: PokemonBeliefs = knowledge.pokemon_beliefs[opponent_pokemon.species]
@@ -57,20 +61,24 @@ class Deliberator:
         damage_ratio = damage / opponent.max_hp
         score = damage_ratio * 100.0
         
-        if active.base_stats["spe"] > opponent.base_stats["spe"]:
+        if active.base_stats["spe"] > opponent.base_stats["spe"] or move.priority >= 1:
             score += 15.0
         else:
             score -= 15.0
         
         if damage_ratio >= opponent.current_hp_fraction:
             score += 50.0
+            if move.priority >= 1:
+                score += 100.0
         else:
             if opponent_beliefs.role == PokemonRole.DEFENSIVE and damage_ratio <= 0.15:
                 score -= 30.0
-            if opponent_beliefs.role == PokemonRole.BULKY and damage_ratio <= 0.4:
+            if opponent_beliefs.role == PokemonRole.BULKY and damage_ratio <= 0.25:
                 score -= 20.0
-        
-        return score
+            if opponent_beliefs.role == PokemonRole.OFFENSIVE and damage_ratio <= 0.35:
+                score -= 20.0
+                
+        return score * move.accuracy * move.expected_hits
 
 
     def _evaluate_switch(self, active_pokemon: Pokemon, pokemon_switch: Pokemon, opponent: Pokemon, opponent_beliefs: PokemonBeliefs) -> float:
@@ -78,7 +86,9 @@ class Deliberator:
         pokemon_moves = [move for move in pokemon_switch.moves.values()]
         opponent_moves = [move for move in opponent.moves.values()]
         
-        score -= calculate_switch_score(active_pokemon, opponent)
+        # If the active pokemon is stil alive, evaluate based on its types
+        if active_pokemon is not None and not active_pokemon.fainted:
+            score -= calculate_switch_score(active_pokemon, opponent)
         score += calculate_switch_score(pokemon_switch, opponent)
         
         for move in opponent_moves:
@@ -90,6 +100,10 @@ class Deliberator:
                 score -= 20
         
         for move in pokemon_moves:
+            # TODO: must score status / boost move
+            if move.base_power == 0.0:
+                continue
+
             damage = calculate_damage(move, pokemon_switch, opponent)
             damage_ratio = damage / opponent.max_hp
             if damage_ratio >= 0.5:
@@ -98,3 +112,16 @@ class Deliberator:
                 score -= 20
         
         return score
+
+
+    def _do_default_action(self, battle: AbstractBattle):
+        if battle.active_pokemon is None or battle.opponent_active_pokemon is None:
+            return self.choose_random_singles_move(battle)
+
+        # Forced switch with no candidate, or no legal action at all
+        if battle.force_switch and not battle.available_switches:
+            return self.choose_random_singles_move(battle)
+        if not battle.available_moves and not battle.available_switches:
+            return self.choose_random_singles_move(battle)
+        
+        return None

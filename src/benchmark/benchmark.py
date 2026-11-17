@@ -4,6 +4,7 @@ import asyncio
 import csv
 from datetime import datetime
 from pathlib import Path
+import random
 import sys
 import time
 
@@ -67,6 +68,9 @@ async def main():
     N_BATTLE = 200
     BATTLE_FORMAT = "gen9randombattle"
     MAX_CONCURRENT_BATTLE = 15
+    SEED = 12345
+    random.seed(SEED)
+    Player.DEFAULT_CHOICE_CHANCE = 0
     
     process = run_showdown_server()
         

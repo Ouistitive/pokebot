@@ -26,6 +26,7 @@ class HeuristicPlayer(Player):
         knowledge = self.knowledge_by_battle.setdefault(battle.battle_tag, Knowledge())
         
         self.perceiver.update(battle, knowledge)
+                
         action = self.deliberator.deliberate(battle, knowledge)
         
         return self.create_order(action)
