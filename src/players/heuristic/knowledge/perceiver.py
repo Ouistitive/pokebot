@@ -21,6 +21,7 @@ class Perceiver:
         if battle.opponent_active_pokemon is None:
             return
 
+        active: Pokemon = battle.active_pokemon
         opponent: Pokemon = battle.opponent_active_pokemon
         species = opponent.species
         pokemon_beliefs = knowledge.pokemon_beliefs
@@ -28,15 +29,16 @@ class Perceiver:
         if not species in pokemon_beliefs:
             pokemon_beliefs[species] = PokemonBeliefs(species)
             
-        active_pokemon_beliefs = pokemon_beliefs[species]
-        active_pokemon_beliefs.update_facts(opponent)
+        opponent_pokemon_beliefs = pokemon_beliefs[species]
+        opponent_pokemon_beliefs.update_facts(opponent)
         
-        self._determine_role(opponent, active_pokemon_beliefs)
-        self._determine_items(active_pokemon_beliefs)
+        self._determine_role(opponent, opponent_pokemon_beliefs)
+        self._determine_items(opponent_pokemon_beliefs)
         self._log_pokemon_turn(knowledge, battle.active_pokemon, opponent)
         
         knowledge.previous_opponent_species = opponent.species
         knowledge.last_opponent_hp = opponent.current_hp_fraction
+        knowledge.previous_pokemon_move_used = active.last_move
 
 
     def _determine_role(self, opponent_pokemon: Pokemon, active_pokemon_beliefs: PokemonBeliefs):
@@ -74,10 +76,10 @@ class Perceiver:
     
     def _log_pokemon_turn(self, knowledge: Knowledge, active: Pokemon, opponent: Pokemon):
         if active and active.last_move:
-            logger.info("%s uses: %s", translate_pokemon_species(active.species), active.last_move.id)
+            logger.info("[My team] %s uses: %s", translate_pokemon_species(active.species), active.last_move.id)
         
         if opponent and opponent.last_move:
-            logger.info("%s uses: %s", translate_pokemon_species(opponent.species), opponent.last_move.id)
+            logger.info("[Opponent] %s uses: %s", translate_pokemon_species(opponent.species), opponent.last_move.id)
 
         if knowledge.previous_opponent_species and knowledge.previous_opponent_species != opponent.species:
             logger.info(

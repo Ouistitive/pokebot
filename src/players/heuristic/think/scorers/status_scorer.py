@@ -24,7 +24,6 @@ def calculate_heal_move_score(move: Move, active: Pokemon, opponent: Pokemon) ->
 
 def calculate_boost_move_score(move: Move, active: Pokemon, opponent_beliefs: PokemonBeliefs, opponent_team: list[Pokemon]) -> float:
     boosts = move.boosts
-    
     if boosts is None:
         return 0.0
     
@@ -38,11 +37,17 @@ def calculate_boost_move_score(move: Move, active: Pokemon, opponent_beliefs: Po
     
     # If the boost is offensive (e.g. dragon dance, calm mind, sword dance...)
     if "atk" in boosts or "spa" in boosts:
+        # Avoid setup when it's still too early (i.e. opponent HP are high)
         for opponent in opponent_team:
             if opponent.current_hp_fraction <= 0.4:
                 score += 10.0
             elif opponent.current_hp_fraction >= 0.7:
                 score -= 10.0
+        
+        setup_atk = boosts.get("atk", 0)
+        setup_spa = boosts.get("spa", 0)
+        
+        score -= (setup_atk * 10 + setup_spa * 10)
     
     if "def" in boosts or "spd" in boosts:
         score += 10.0

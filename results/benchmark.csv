@@ -2,3 +2,47 @@ timestamp,agent_name,opponent_name,battle_format,n_battles,n_won,win_rate_percen
 2026-11-17 15:04:46,HeuristicPlayer,RandomPlayer,gen9randombattle,200,196,98.0,7.49,0.0374,15
 2026-11-17 15:04:51,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,174,87.0,5.78,0.0289,15
 2026-11-17 15:04:58,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,90,45.0,6.13,0.0306,15
+
+2026-11-17 20:31:02,HeuristicPlayer,RandomPlayer,gen9randombattle,200,191,95.5,10.27,0.0514,15
+2026-11-17 20:31:08,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,158,79.0,6.22,0.0311,15
+2026-11-17 20:31:14,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,68,34.0,6.31,0.0316,15
+
+2026-11-17 20:32:21,HeuristicPlayer,RandomPlayer,gen9randombattle,200,188,94.0,10.1,0.0505,15
+2026-11-17 20:32:27,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,161,80.5,6.31,0.0316,15
+2026-11-17 20:32:34,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,76,38.0,6.24,0.0312,15
+
+2026-11-17 20:50:33,HeuristicPlayer,RandomPlayer,gen9randombattle,200,187,93.5,9.49,0.0475,15
+2026-11-17 20:50:39,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,156,78.0,6.18,0.0309,15
+2026-11-17 20:50:45,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,76,38.0,6.13,0.0306,15
+
+2026-11-18 09:35:01,HeuristicPlayer,RandomPlayer,gen9randombattle,200,103,51.5,16.71,0.0836,15
+2026-11-18 09:35:11,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,41,20.5,10.08,0.0504,15
+2026-11-18 09:35:19,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,8,4.0,7.95,0.0398,15
+
+2026-11-18 09:40:18,HeuristicPlayer,RandomPlayer,gen9randombattle,200,130,65.0,15.59,0.078,15
+2026-11-18 09:40:28,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,66,33.0,9.44,0.0472,15
+2026-11-18 09:40:35,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,15,7.5,7.66,0.0383,15
+
+2026-11-18 09:42:06,HeuristicPlayer,RandomPlayer,gen9randombattle,200,153,76.5,14.49,0.0725,15
+2026-11-18 09:42:16,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,111,55.5,9.25,0.0463,15
+2026-11-18 09:42:23,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,35,17.5,7.41,0.0371,15
+
+2026-11-18 09:44:11,HeuristicPlayer,RandomPlayer,gen9randombattle,200,159,79.5,14.91,0.0746,15
+2026-11-18 09:44:20,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,117,58.5,8.88,0.0444,15
+2026-11-18 09:44:27,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,31,15.5,7.45,0.0372,15
+
+2026-11-18 11:23:56,HeuristicPlayer,RandomPlayer,gen9randombattle,200,178,89.0,25.64,0.1282,15
+2026-11-18 11:24:12,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,152,76.0,15.57,0.0778,15
+2026-11-18 11:24:25,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,54,27.0,13.46,0.0673,15
+
+2026-11-18 11:40:58,HeuristicPlayer,RandomPlayer,gen9randombattle,200,193,96.5,24.87,0.1244,15
+2026-11-18 11:41:13,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,139,69.5,15.09,0.0754,15
+2026-11-18 11:41:27,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,53,26.5,14.05,0.0703,15
+
+2026-11-20 11:47:32,HeuristicPlayer,RandomPlayer,gen9randombattle,200,192,96.0,22.96,0.1148,15
+2026-11-20 11:47:47,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,146,73.0,14.94,0.0747,15
+2026-11-20 11:48:01,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,55,27.5,13.67,0.0684,15
+
+2026-11-20 22:37:40,HeuristicPlayer,RandomPlayer,gen9randombattle,200,190,95.0,10.98,0.0549,15
+2026-11-20 22:37:47,HeuristicPlayer,MaxBasePowerPlayer,gen9randombattle,200,159,79.5,6.9,0.0345,15
+2026-11-20 22:37:53,HeuristicPlayer,SimpleHeuristicsPlayer,gen9randombattle,200,70,35.0,6.46,0.0323,15
